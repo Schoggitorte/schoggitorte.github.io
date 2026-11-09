@@ -1,0 +1,20 @@
+ZAG WINTERTHUR – GITHUB ANLEITUNG
+
+1. ZIP-Datei auf dem Gaming-PC herunterladen und entpacken.
+2. Die darin enthaltene index.html auf GitHub hochladen:
+   https://github.com/Schoggitorte/schoggitorte.github.io
+   > Add file > Upload files > index.html auswählen > Commit changes.
+3. Auf https://schoggitorte.github.io/ die Seite neu laden (Strg+F5).
+4. Prüfen, dass im Menü kein Login mehr steht und unter Downloads die öffentliche VA sichtbar ist.
+
+SPÄTER DIE ÖFFENTLICHE VA VERÖFFENTLICHEN:
+1. Die fertige öffentliche, anonymisierte VA OHNE BILDER als PDF speichern.
+2. Dateiname: VA-Oeffentlich-ohne-Bilder.pdf
+3. Diese PDF in den HAUPTORDNER des gleichen GitHub-Repositories hochladen,
+   direkt neben index.html (nicht in den assets-Ordner).
+4. Commit changes. Sobald die PDF über GitHub Pages verfügbar ist,
+   wird der Downloadbutton automatisch aktiv.
+
+WICHTIG: Nur die freigegebene öffentliche VA hochladen. Keine privaten Namen,
+Bilder oder vertraulichen Inhalte veröffentlichen. Die Minecraft-Bilder auf
+der Website selbst bleiben vollständig erhalten.
