@@ -241,3 +241,221 @@ window.addEventListener("load", () => {
   });
 });
 </script>
+
+<!-- ZAG WEBSITE UPDATE: Galerie und Korrekturen -->
+<script>
+(function () {
+  function updateWebsite() {
+    // 1. Projektbeschreibung korrigieren
+    const intro = document.querySelector("#projekt .intro-copy");
+    if (intro) {
+      intro.innerHTML = intro.innerHTML.replace(
+        "Baupläne, Aufnahmen und die Räume vor Ort",
+        "Baupläne und die Räume vor Ort"
+      );
+    }
+
+    // 2. Überflüssigen Galerietext entfernen
+    document.querySelectorAll("#galerie .section-header p")
+      .forEach(p => p.remove());
+
+    // 3. Mod-Anzahl aktualisieren
+    document.querySelectorAll(
+      ".hero-chips b, .stats-grid strong"
+    ).forEach(el => {
+      if (el.textContent.trim() === "39") {
+        el.textContent = "40";
+      }
+    });
+
+    document.querySelectorAll(".faqs summary").forEach(el => {
+      el.textContent = el.textContent.replace(
+        "39 Mods", "40 Mods"
+      );
+    });
+
+    // 4. Komplettpaket entfernen
+    document.querySelector(".download-both")?.remove();
+
+    document.querySelectorAll(
+      ".faqs p, .important-list p"
+    ).forEach(p => {
+      const strong = p.querySelector("strong");
+      const title = strong?.textContent.trim() || "";
+
+      if (title === "Mac-Tastatur:" ||
+          title === "Komplettpaket:") {
+        p.remove();
+      } else {
+        p.innerHTML = p.innerHTML.replace(
+          "Ein Komplettpaket enthält beide ZIP-Dateien, die separat installiert werden.",
+          "Beide Dateien werden getrennt installiert."
+        );
+      }
+    });
+
+    // 5. Öffentliche Galerie bearbeiten
+    const gallery = document.querySelector(
+      "#galerie .gallery-grid"
+    );
+    const controls = document.querySelector(
+      "#galerie .gallery-controls"
+    );
+
+    if (!gallery || !controls) {
+      console.error("ZAG: Galerie nicht gefunden.");
+      return;
+    }
+
+    // Bild 02 aus der öffentlichen Galerie entfernen
+    gallery.querySelectorAll(".photo").forEach(photo => {
+      if (photo.dataset.title ===
+          "Das ZAG aus der Vogelperspektive") {
+        photo.remove();
+      }
+    });
+
+    // 6. Gewünschte Bildreihenfolge
+    const order = [
+      "Projektübersicht",
+      "Schulhaus – Gesamtübersicht",
+      "Innenraum mit Sitzgelegenheiten",
+      "Lounge und Arbeitsplätze",
+      "Schulgang mit Türen",
+      "Treppenhaus und Glasfront",
+      "Offener Bereich mit Treppe",
+      "Aula von oben",
+      "Aula und Sitzreihen",
+      "Sitzgruppe im Obergeschoss",
+      "Farbiger Korridor",
+      "Treppenhaus",
+      "Erster Bauplatz",
+      "Fläche mit WorldEdit",
+      "Grundriss und Markierungen",
+      "Erstes Stockwerk-Gerüst",
+      "Tragwerk und Aufteilung",
+      "Markierte Räume"
+    ];
+
+    const photos = Array.from(
+      gallery.querySelectorAll(".photo")
+    );
+
+    photos.sort((a, b) => {
+      const ai = order.indexOf(a.dataset.title);
+      const bi = order.indexOf(b.dataset.title);
+
+      return (ai === -1 ? 999 : ai) -
+             (bi === -1 ? 999 : bi);
+    });
+
+    // Bilder neu anordnen
+    photos.forEach((photo, index) => {
+      gallery.appendChild(photo);
+
+      photo.dataset.featured =
+        index < 9 ? "true" : "false";
+
+      photo.classList.remove("photo-large");
+
+      if (photo.dataset.title ===
+          "Schulhaus – Gesamtübersicht") {
+        photo.classList.add("photo-large");
+      }
+    });
+
+    // 7. Nur zwei Galerie-Schaltflächen
+    controls.innerHTML = `
+      <button type="button"
+        class="filter-btn"
+        data-filter="Übersicht"
+        aria-pressed="true">
+        Übersicht
+      </button>
+      <button type="button"
+        class="filter-btn"
+        data-filter="Alle Bilder"
+        aria-pressed="false">
+        Alle Bilder
+      </button>
+    `;
+
+    const buttons = Array.from(
+      controls.querySelectorAll(".filter-btn")
+    );
+
+    // 8. Automatische Nummerierung
+    function showGallery(mode) {
+      let number = 0;
+
+      photos.forEach(photo => {
+        const visible =
+          mode === "Alle Bilder" ||
+          photo.dataset.featured === "true";
+
+        photo.hidden = !visible;
+
+        if (!visible) return;
+
+        number++;
+
+        const caption = photo.querySelector("span");
+
+        if (caption) {
+          if (!caption.firstChild ||
+              caption.firstChild.nodeType !== 3) {
+            caption.prepend(
+              document.createTextNode("")
+            );
+          }
+
+          caption.firstChild.textContent =
+            String(number).padStart(2, "0") + " ";
+        }
+      });
+
+      buttons.forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.filter === mode)
+        );
+      });
+
+      const count = document.getElementById(
+        "galleryCount"
+      );
+
+      if (count) {
+        count.textContent =
+          mode === "Übersicht"
+            ? `${number} von ${photos.length} Bildern`
+            : `${number} Bilder`;
+      }
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        showGallery(button.dataset.filter);
+      });
+    });
+
+    // Standardansicht beim Öffnen
+    showGallery("Übersicht");
+
+    console.log(
+      "ZAG-Update erfolgreich: " +
+      photos.length + " öffentliche Bilder."
+    );
+  }
+
+  // Nach dem bisherigen Website-Code ausführen
+  if (document.readyState === "complete") {
+    updateWebsite();
+  } else {
+    window.addEventListener(
+      "load", updateWebsite, { once: true }
+    );
+  }
+})();
+</script>
+<!-- ENDE ZAG WEBSITE UPDATE -->
