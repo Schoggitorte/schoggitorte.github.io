@@ -133,3 +133,111 @@ portalButton.addEventListener('click',()=>{
 document.getElementById('portalClose').addEventListener('click',()=>document.getElementById('portalDialog').close());
 
 </script></body></html>
+
+<script>
+window.addEventListener("load", () => {
+  // Projektbeschreibung korrigieren
+  const intro = document.querySelector("#projekt .intro-copy");
+  if (intro) {
+    intro.innerHTML = intro.innerHTML.replace(
+      "Baupläne, Aufnahmen und die Räume vor Ort",
+      "Baupläne und die Räume vor Ort"
+    );
+  }
+
+  // Überflüssigen Galerietext entfernen
+  const hinweis = document.querySelector("#galerie .section-header p");
+  if (hinweis && hinweis.textContent.includes("Zuerst siehst du")) {
+    hinweis.remove();
+  }
+
+  // Nur Übersicht und Alle Bilder anzeigen
+  const buttons = [...document.querySelectorAll("#galerie .filter-btn")];
+  const uebersicht = buttons.find(b =>
+    ["Übersicht", "Auswahl"].includes(b.dataset.filter)
+  );
+  const alle = buttons.find(b => b.dataset.filter === "Alle Bilder");
+
+  buttons.forEach(b => {
+    if (b !== uebersicht && b !== alle) b.remove();
+  });
+  if (uebersicht) uebersicht.textContent = "Übersicht";
+
+  // Galeriebilder sinnvoll sortieren
+  const galerie = document.querySelector("#galerie .gallery-grid");
+  if (galerie) {
+    const bilder = [...galerie.querySelectorAll(".photo")];
+
+    const reihenfolge = [
+      "Projektübersicht",
+      "Das ZAG aus der Vogelperspektive",
+      "Schulhaus – Gesamtübersicht",
+      "6. Stock von aussen",
+      "EG",
+      "Innenraum von innen",
+      "Innenraum mit Sitzgelegenheiten",
+      "Lounge und Arbeitsplätze",
+      "Schulzimmer",
+      "Schulgang mit Türen",
+      "Gang",
+      "Farbiger Korridor",
+      "Treppenhaus und Glasfront",
+      "Treppenhaus",
+      "Offener Bereich mit Treppe",
+      "Aula",
+      "Aula von oben",
+      "Aula und Sitzreihen",
+      "Löwe",
+      "Sitzgruppe im Obergeschoss",
+      "Erster Bauplatz",
+      "Podest",
+      "Fläche mit WorldEdit",
+      "Grundriss",
+      "Grundriss und Markierungen",
+      "Gerüst",
+      "Erstes Stockwerk-Gerüst",
+      "Tragwerk und Aufteilung",
+      "Zimmergrundriss",
+      "Markierte Räume"
+    ];
+
+    bilder.sort((a, b) => {
+      const x = reihenfolge.indexOf(a.dataset.title);
+      const y = reihenfolge.indexOf(b.dataset.title);
+      return (x < 0 ? 999 : x) - (y < 0 ? 999 : y);
+    });
+
+    bilder.forEach((bild, i) => {
+      galerie.appendChild(bild);
+      bild.dataset.featured = i < 10 ? "true" : "false";
+    });
+
+    if (uebersicht) uebersicht.click();
+  }
+
+  // Mod-Anzahl auf 40 ändern
+  document.querySelectorAll(
+    ".hero-chips b, .stats-grid strong, .faqs summary"
+  ).forEach(el => {
+    if (el.textContent.trim() === "39") el.textContent = "40";
+    else if (el.tagName === "SUMMARY") {
+      el.textContent = el.textContent.replace("39 Mods", "40 Mods");
+    }
+  });
+
+  // Komplettpaket-Bereich entfernen
+  document.querySelector(".download-both")?.remove();
+
+  // Nicht mehr benötigte Hinweise entfernen
+  document.querySelectorAll(".faqs p, .important-list p").forEach(p => {
+    if (/^(Mac-Tastatur:|Komplettpaket:)/.test(p.textContent.trim())) {
+      p.remove();
+    } else {
+      p.innerHTML = p.innerHTML.replace(
+        "Ein Komplettpaket enthält beide ZIP-Dateien, die separat installiert werden.",
+        "Beide Dateien werden getrennt installiert."
+      );
+    }
+  });
+});
+</script>
